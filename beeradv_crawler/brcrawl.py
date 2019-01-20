@@ -41,16 +41,18 @@ def crawl_style(url='/beer/styles/8/',outdir='temp'):
     os.system("mkdir -p "+outdir)
     beers=getcon(url)
     with open("{0}/beers.html".format(outdir),'w') as outf: outf.write(beers)
-    beers=beers.split('<tr><td valign="top" class="hr_bottom_light">')[1:]
+    beers=[i for i in beers.split('"') if '/beer/profile/' in i]
     for i in beers:
-        url=[x for x in i.split('"') if '/beer/profile/' in x][0]
-        print '\t>> beer: {0}/{1}'.format(outdir,'_'.join(url.split('/')[-3:-1]))
-        crawl_beer(url,'{0}/{1}'.format(outdir,'_'.join(url.split('/')[-3:-1])))
+        tag1,tag2=i.split('/')[-3:-1]
+        if tag1.isdigit() and tag2.isdigit():
+            print '\t>> beer: {0}/{1}_{2}'.format(outdir,tag1,tag2)
+            crawl_beer(i,'{0}/{1}_{2}'.format(outdir,tag1,tag2))
 
 def crawl_all(outdir='temp'):
     '''
     crawl all beers
     '''
+    os.system("mkdir -p "+outdir)
     styles=getcon('/beer/styles/')
     with open("{0}/styles.html".format(outdir),'w') as outf: outf.write(styles)
     styles=[i for i in styles.split('"') if '/beer/styles/' in i]
