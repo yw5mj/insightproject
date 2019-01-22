@@ -14,10 +14,12 @@ class id_mapping(object):
         '''
         mapping style IDs
         '''
+        print('>> mapping styles')
         outf=open('{0}/{1}.csv'.format(self.outdir,filename),'w')
         idwrt=csv.writer(outf,delimiter=';')
         styles=os.listdir(self.indir)
         for stid in styles:
+            if stid=='styles.html': continue
             inf=open('{0}/{1}/beers.html'.format(self.indir,stid))
             stl=inf.read().split('<title>')[-1].split('</title>')[0].split('|')[0]
             idwrt.writerow([int(stid),stl])
@@ -28,6 +30,7 @@ class id_mapping(object):
         '''
         mapping beer and brewery IDs
         '''
+        print('>> mapping breweries and beers')
         brset=set()
         bef=open('{0}/{1}.csv'.format(self.outdir,beerf),'w')
         brf=open('{0}/{1}.csv'.format(self.outdir,brewf),'w')
@@ -35,6 +38,8 @@ class id_mapping(object):
         brwrt=csv.writer(brf,delimiter=';')
         styles=os.listdir(self.indir)
         for stid in styles:
+            if stid=='styles.html': continue
+            print('\t\t>> searching in style {0}'.format(stid))
             beers=os.listdir('{0}/{1}'.format(self.indir,stid))
             for beid in beers:
                 if beid=='beers.html': continue
@@ -48,3 +53,9 @@ class id_mapping(object):
                 inf.close()
         bef.close()
         brf.close()
+
+
+if __name__=='__main__':
+    idmap=id_mapping()
+    idmap.style_map()
+    idmap.beer_brew_map()
