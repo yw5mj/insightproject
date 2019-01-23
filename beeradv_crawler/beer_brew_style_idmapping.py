@@ -49,7 +49,10 @@ class id_mapping(object):
                 bewrt.writerow([beid,conts[0]])
                 if brid not in brset:
                     brset.add(brid)
-                    brwrt.writerow([brid,conts[1]])
+                    try:
+                        brwrt.writerow([brid,conts[1]])
+                    except:
+                        print(conts,stid,beid)
                 inf.close()
         bef.close()
         brf.close()

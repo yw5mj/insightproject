@@ -3,7 +3,7 @@
 
 import requests
 import time,os
-def getcon(url,delta=0.5):
+def getcon(url,delta=0.2):
     '''
     get webpage content from beeradvocate
     '''
@@ -63,7 +63,6 @@ def crawl_all(outdir='temp'):
     '''
     os.system("mkdir -p "+outdir)
     doneset=set([int(i) for i in os.listdir(outdir) if i.isdigit()])
-    doneset.discard(142)
     styles=getcon('/beer/styles/')
     with open("{0}/styles.html".format(outdir),'w') as outf: outf.write(styles)
     styles=[i for i in styles.split('"') if '/beer/styles/' in i]
@@ -77,5 +76,5 @@ def crawl_all(outdir='temp'):
 
     
 if __name__=="__main__":
-    crawl_all('data')
+    crawl_all('data_html')
     
