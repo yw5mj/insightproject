@@ -26,7 +26,10 @@ if __name__=='__main__':
     dic=gensim.corpora.Dictionary(inf)
     dic.filter_extremes(no_below=10, no_above=1, keep_n=5000)
     corpus=[dic.doc2bow(i) for i in inf]
-    X=np.transpose(gensim.matutils.corpus2csc(corpus).astype(np.int64))
+    tfidf = gensim.models.TfidfModel(corpus)
+    corpus_tfidf = tfidf[corpus]
+    X=np.transpose(gensim.matutils.corpus2csc(corpus_tfidf).astype(np.float))
+    X=(X*100).astype(np.int64)
     glda_mdl=guidedlda.GuidedLDA(n_topics=4, n_iter=100, random_state=7, refresh=20)
     glda_mdl.fit(X,seed_topics=seed_ids(dic), seed_confidence=0.15)
     vocab=list(dic.values())
