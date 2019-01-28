@@ -14,10 +14,12 @@ def pre_process(inp):
 
 def seed_ids(dic):
     seeds=[
-        ['bitter','earthy','malt','hop'],
+        ['bitter','hop','roasted'],
         ['chocolate','dark','black'],
-        ['sweet','honey','fruit'],
-        ['golden','clear','light']
+        ['sweet','honey','sugar'],
+        ['golden','clear','light'],
+#        ['strong','alcohol'],
+        ['sour','vinegar']
         ]
     w2id={dic[i]:i for i in dic}
     return {w2id[i]:n for n,x in enumerate(seeds) for i in x}
@@ -32,8 +34,8 @@ if __name__=='__main__':
     X=(X*100).astype(np.int64)
     seeds=seed_ids(dic)
     vocab=list(dic.values())
-    for n in range(4,25,4):
-        f=open('scan_{0}.txt'.format(n),'w')
+    for n in range(6,27,5):
+        f=open('scan/scan_{0}topic.txt'.format(n),'w')
         glda_mdl=guidedlda.GuidedLDA(n_topics=n, n_iter=100, random_state=7, refresh=20)
         glda_mdl.fit(X,seed_topics=seeds, seed_confidence=0.15)
         topic_word = glda_mdl.topic_word_

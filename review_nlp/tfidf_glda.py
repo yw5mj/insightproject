@@ -14,10 +14,12 @@ def pre_process(inp):
 
 def seed_ids(dic):
     seeds=[
-        ['bitter','earthy','malt','hop'],
+        ['bitter','hop','roasted'],
         ['chocolate','dark','black'],
-        ['sweet','honey','fruit'],
-        ['golden','clear','light']
+        ['sweet','honey','sugar'],
+        ['golden','clear','light'],
+#        ['strong','alcohol'],
+        ['sour','vinegar']
         ]
     w2id={dic[i]:i for i in dic}
     return {w2id[i]:n for n,x in enumerate(seeds) for i in x}
@@ -30,7 +32,7 @@ if __name__=='__main__':
     corpus_tfidf = tfidf[corpus]
     X=np.transpose(gensim.matutils.corpus2csc(corpus_tfidf).astype(np.float))
     X=(X*100).astype(np.int64)
-    glda_mdl=guidedlda.GuidedLDA(n_topics=4, n_iter=100, random_state=7, refresh=20)
+    glda_mdl=guidedlda.GuidedLDA(n_topics=6, n_iter=100, random_state=7, refresh=20)
     glda_mdl.fit(X,seed_topics=seed_ids(dic), seed_confidence=0.15)
     vocab=list(dic.values())
     topic_word = glda_mdl.topic_word_
