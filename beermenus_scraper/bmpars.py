@@ -8,7 +8,8 @@ def parser_bar(inf='data_html/13727-culpeppers-pub-grill.html',csvw=None):
         locat=cont.split("MapClicks")[-1].split('</a>')[0].split('>')[-1]
         allbrs=cont.split('<h3 class="mb-0 text-normal">')[1:]
         for i in allbrs:
-            bname=i.split('>')[1].split('<')[0]
+#            bname=i.split('>')[1].split('<')[0]
+            bname=i.split('<a href')[1].split('>')[1].split('<')[0]
             info1=' '.join(i.split('<p class="caption text-gray mb-0">')[1].split('</p>')[0].replace('·','|').split())
             try:
                 info2='|'.join(i.split('<p class="caption text-right mb-0 last">')[1].split('</p>')[0].split())
