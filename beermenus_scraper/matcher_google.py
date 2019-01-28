@@ -14,7 +14,11 @@ def one_beer(drv,beername):
     if keystr not in cont:
         print(beername)
     else:
-        return cont.split(keystr)[1].split('"')[0]
+        output=cont.split(keystr)[1].split('"')[0].split('/')
+        if len(output)!=3:
+            print(beername)
+            return
+        return '_'.join(output[:2])
 
 drv=webdriver.Firefox()
 drv.get("https://www.google.com/")
@@ -23,7 +27,7 @@ innames=set(pd.read_csv("bars.csv",delimiter=';')['beer'])
 dones=set(pd.read_csv('name_id_matcher.csv',delimiter=';')['name'])
 with open('name_id_matcher.csv','a+') as f:
     wrt=csv.writer(f,delimiter=';')
-    wrt.writerow(["name",'id'])
+#    wrt.writerow(["name",'id'])
     for i in innames:
         if i in dones:
             print('skipping ',i)
