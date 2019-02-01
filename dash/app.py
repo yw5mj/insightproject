@@ -6,6 +6,7 @@ from utils import myweb,beername_matcher
 import pandas as pd
 from surprise import dump
 
+
 app=dash.Dash(__name__, external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
 
 app.config.suppress_callback_exceptions = True
@@ -40,7 +41,7 @@ def beer_fillin(input_value):
         app.in_vec=recomdl.qi[beer_id]
     except:
         return 'beer not found'
-    return 'You mean "{0}" from "{1}"'.format(inf['beer'][n].strip(),inf['brewery'][n].strip())
+    return 'You mean "{0}" from "{1}"?'.format(inf['beer'][n].strip(),inf['brewery'][n].strip())
 
     
 @app.callback(
