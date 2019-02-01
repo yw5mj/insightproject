@@ -19,7 +19,7 @@ app.layout=html.Div([
 @app.callback(dash.dependencies.Output('page-content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
-    if pathname == '/page2':
+    if pathname == '/recommendations':
         if not hasattr(app,"in_vec"):
             return html.Div([html.Div('Please tell us your beeradvocate username or favourite beer.')])
         if not hasattr(app,"testlist"):
@@ -41,7 +41,7 @@ def beer_fillin(input_value):
         app.in_vec=recomdl.qi[beer_id]
     except:
         return 'beer not found'
-    return 'You mean "{0}" from "{1}"?'.format(inf['beer'][n].strip(),inf['brewery'][n].strip())
+    return 'Do you mean "{0}" from "{1}"?'.format(inf['beer'][n].strip(),inf['brewery'][n].strip())
 
     
 @app.callback(

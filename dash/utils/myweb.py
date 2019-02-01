@@ -48,7 +48,7 @@ def page1(bars):
     html.Div(style={'textAlign': 'center'}, children=[
     html.Div(children="Now get recommendations!"),
     html.Br(),
-    html.A(html.Button('Submit'),href='/page2')])
+    html.A(html.Button('Submit'),href='/recommendations')])
 ])
 
 def page2(inp,beerinfo,barname):
