@@ -17,7 +17,7 @@ dark_layout = go.Layout(
         showline=False,
         showticklabels=True,
         zeroline=False,
-        domain=[0.2, 0.8]
+        domain=[0.4, 0.6]
     ),
     barmode='stack',
     paper_bgcolor='rgb(255,250,250)',
@@ -27,22 +27,23 @@ dark_layout = go.Layout(
 
 def page1(bars):
     return html.Div(style={'backgroundColor': bkg_clr}, children=[
-    html.H1(children='Brewston!',style={'textAlign': 'center','color': ttl_clr}),
+    html.H1(children='Brewston',style={'textAlign': 'center','color': ttl_clr}),
+    html.H6(children='Find your beer in Boston bars',style={'textAlign': 'center'}),
     html.Hr(),
     html.H2(children='Step 1',style={'textAlign': 'center'}),
     html.Div(children='Enter the bar you are in:'),
-    dcc.Dropdown(id='bars',options=[{'label':i,'value':i} for i in bars],value='None'),
+    dcc.Dropdown(id='bars',options=[{'label':i,'value':i} for i in bars],value='Town Wine and Spirits'),
     html.Div(id='barname'),
     html.Hr(),
     html.H2(children='Step 2',style={'textAlign': 'center'}),
     html.Div(children='Enter your beeradvocate.com username:'),
-    dcc.Input(id='my-username', value='', type='text'),
+    dcc.Input(id='my-username', value='zimm421', type='text'),
     html.Div(id='userid'),
     html.Br(),
     html.Br(),
     html.H6(children="Don't have a beeradvocate.com account? No worries!"),
     html.Div(children="Enter your favourite beer name:"),
-    dcc.Input(id='my-beer', value='', type='text'),
+    dcc.Input(id='my-beer', value='limbo ipa', type='text'),
     html.Div(id='beerid'),
     html.Hr(),
     html.Div(style={'textAlign': 'center'}, children=[
@@ -76,7 +77,8 @@ def recom(beerid,beerinfo):
                     [dcc.Graph(figure={'data':[go.Pie(labels=['bitter','sweet','sour'],values=flavors)],'layout':go.Layout(paper_bgcolor='rgb(255,250,250)',plot_bgcolor='rgb(255,250,250)')})],style={'width': '20%', 'display': 'inline-block'},
                     className="six columns"),
                 html.Div(
-                    [dcc.Graph(figure={'data':[go.Bar(y=['darkness'],x=[clrs],orientation = 'h',marker={'color':'rgba(38, 24, 74, 0.8)'}),go.Bar(y=['darkness'],x=[100-clrs],orientation = 'h',marker={'color':'rgba(164, 163, 204, 0.85)'})],'layout':dark_layout})],style={'width': '20%', 'display': 'inline-block'},
+#                    [dcc.Graph(figure={'data':[go.Bar(y=['darkness'],x=[clrs],orientation = 'h',marker={'color':'rgba(38, 24, 74, 0.8)'}),go.Bar(y=['darkness'],x=[100-clrs],orientation = 'h',marker={'color':'rgba(164, 163, 204, 0.85)'})],'layout':dark_layout})],style={'width': '20%', 'display': 'inline-block'},
+                    [dcc.Graph(figure={'data':[go.Bar(y=['darkness'],x=[clrs],orientation = 'h',marker={'color':'rgba(178,34,34,0.8)'}),go.Bar(y=['darkness'],x=[100-clrs],orientation = 'h',marker={'color':'rgba(238,232,170,0.85)'})],'layout':dark_layout})],style={'width': '20%', 'display': 'inline-block'},
                     className="six columns"),
                 html.Div([html.Br()]*7+[
                     html.Div(children='Beeradvocate score: {0}/5'.format(info['BA_score'].iloc[0])),

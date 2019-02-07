@@ -15,7 +15,7 @@ def pre_process(inp):
 
 def seed_ids(dic):
     seeds=[
-        ['bitter','hop','roasted'],
+        ['bitter','hop'],
         ['chocolate','dark','black'],
         ['sweet','honey','sugar'],
         ['golden','clear','light'],

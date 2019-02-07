@@ -9,6 +9,17 @@ from surprise import dump
 
 app=dash.Dash(__name__, external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
 
+app.title='Brewston'
+app.dic=gensim.corpora.Dictionary.load('model/match_dict.mdl')
+app.tfidf = gensim.models.TfidfModel.load('model/tfidf.mdl')
+with open('model/beerX.mdl','rb') as f:app.X=pickle.load(f)
+with open('model/barbeer_recovec.mdl','rb') as f:app.bar_reco=pickle.load(f)
+app.recomdl=dump.load('model/RECOMDL.mdl')[1]
+app.inf=pd.read_csv('data_csv/beer_id.csv',';')
+app.beerinfo=pd.read_csv('data_csv/final.csv')
+app.bars=list(set(app.beerinfo['bar']))
+app.bars.sort()
+
 app.config.suppress_callback_exceptions = True
 
 app.layout=html.Div([
@@ -24,11 +35,11 @@ def display_page(pathname):
             return html.Div([html.Div('Please tell us your beeradvocate username or favourite beer.')])
         if not hasattr(app,"testlist"):
             return html.Div([html.Div('Please choose the bar.')])
-        scores=[(i,bar_reco[i].dot(app.in_vec)) for i in app.testlist]
+        scores=[(i,app.bar_reco[i].dot(app.in_vec)) for i in app.testlist]
         scores.sort(key=lambda x:x[1],reverse=True)
-        return myweb.page2([i[0] for i in scores[:3]],beerinfo,app.barname)
+        return myweb.page2([i[0] for i in scores[:3]],app.beerinfo,app.barname)
     else:
-        return myweb.page1(bars)
+        return myweb.page1(app.bars)
     
 @app.callback(
     Output('beerid', 'children'),
@@ -36,12 +47,12 @@ def display_page(pathname):
 )
 def beer_fillin(input_value):
     try:
-        n=beername_matcher.get_match(input_value,dic,X,tfidf)
-        beer_id=recomdl.trainset.to_inner_iid(inf.id[n])
-        app.in_vec=recomdl.qi[beer_id]
+        n=beername_matcher.get_match(input_value,app.dic,app.X,app.tfidf)
+        beer_id=app.recomdl.trainset.to_inner_iid(app.inf.id[n])
+        app.in_vec=app.recomdl.qi[beer_id]
     except:
         return 'beer not found'
-    return 'Do you mean "{0}" from "{1}"?'.format(inf['beer'][n].strip(),inf['brewery'][n].strip())
+    return 'Do you mean "{0}" from "{1}"?'.format(app.inf['beer'][n].strip(),app.inf['brewery'][n].strip())
 
     
 @app.callback(
@@ -50,8 +61,8 @@ def beer_fillin(input_value):
 )
 def username_fillin(input_value):
     try:
-        usr_id=recomdl.trainset.to_inner_uid(input_value)
-        app.in_vec=recomdl.pu[usr_id]
+        usr_id=app.recomdl.trainset.to_inner_uid(input_value)
+        app.in_vec=app.recomdl.pu[usr_id]
     except Exception as e:
         print(e)
         return 'username "{}" not found in the database'.format(input_value)
@@ -62,19 +73,10 @@ def username_fillin(input_value):
     [Input('bars', 'value')]
 )
 def bar_dropdown(input_value):
-    app.testlist=beerinfo[beerinfo['bar']==input_value]['beer_id']
+    app.testlist=app.beerinfo[app.beerinfo['bar']==input_value]['beer_id']
     app.barname=input_value
     return 'You\'ve selected "{}"'.format(input_value)
 
-if __name__=='__main__':
 
-    dic=gensim.corpora.Dictionary.load('model/match_dict.mdl')
-    tfidf = gensim.models.TfidfModel.load('model/tfidf.mdl')
-    with open('model/beerX.mdl','rb') as f:X=pickle.load(f)
-    with open('model/barbeer_recovec.mdl','rb') as f:bar_reco=pickle.load(f)
-    recomdl=dump.load('model/RECOMDL.mdl')[1]
-    inf=pd.read_csv('/home/yanchu/work/insightproject/beeradv_crawler/data_csv/beer_id.csv',';')
-    beerinfo=pd.read_csv('/home/yanchu/work/insightproject/cleandata/final.csv')
-    bars=list(set(beerinfo['bar']))
-    bars.sort()
+if __name__=='__main__':
     app.run_server(debug=True)
