@@ -5,13 +5,22 @@ import pandas as pd
 import pickle,sys
 
 def pre_process(inp):
-    from nltk.stem import WordNetLemmatizer
-    lemm=WordNetLemmatizer()
-    temp=[lemm.lemmatize(word.lower()) for word in gensim.utils.tokenize(inp.replace("'",'').replace('&',''))]
+    temp=[word.lower() for word in gensim.utils.tokenize(inp.replace("'",'').replace('&',''))]
     ignset={"company",'brewing','brewer','brewery','beer'}
     temp=[i for i in temp if i not in ignset]
     return temp
-
+def save_model():
+    inf=pd.read_csv('/home/yanchu/work/insightproject/beeradv_crawler/data_csv/beer_id.csv',';')
+    inf['cont']=inf['beer']+inf['brewery']
+    inf=[pre_process(i) for i in inf['cont']]
+    dic=gensim.corpora.Dictionary(inf)
+    dic.save('model/match_dict.mdl')
+    corpus=[dic.doc2bow(i) for i in inf]
+    tfidf = gensim.models.TfidfModel(corpus)
+    tfidf.save('model/tfidf.mdl')
+    corpus_tfidf = tfidf[corpus]
+    X=gensim.matutils.corpus2csc(corpus_tfidf)
+    with open('model/beerX.mdl','wb') as f: pickle.dump(X,f)
 def get_match(inp,dic,X,tfidf):
     inp=pre_process(inp)
     corpus=[dic.doc2bow(inp)]
