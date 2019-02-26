@@ -1,4 +1,4 @@
-# Brewston --Find you beer in any boston bars
+# Brewston --Find your beer in any boston bars
 #### My Insight data science project, which was done within 3 weeks time at Insight Boston
 
 ##### Slides: 
